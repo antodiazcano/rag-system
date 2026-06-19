@@ -1,0 +1,42 @@
+[project]
+name = "template-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bandit>=1.9.4",
+    "black>=26.3.1",
+    "complexipy>=5.4.1",
+    "flake8>=7.3.0",
+    "flake8-pyproject>=1.2.4",
+    "idna==3.15",
+    "isort>=8.0.1",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mypy>=2.1.0",
+    "pylint>=4.0.5",
+    "pymdown-extensions==10.21.3",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.12",
+]
+
+[[tool.mypy.overrides]]
+module = ""
+ignore_missing_imports = true
+
+[tool.flake8]
+max-line-length = 88
+ignore = ["E203", "W503"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = "--cov src"
+
+[tool.coverage.run]
+omit = ["src/main.py"]
+
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
