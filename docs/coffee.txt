@@ -1,0 +1,50 @@
+========================================================================
+"CAFÉ & CÓDIGO" OPERATIONS, OFFERS, AND REGULATIONS MANUAL
+Version 2.4 - Internal and Customer Service Document
+========================================================================
+
+1. SHOP HOURS AND REGULATIONS
+------------------------------------------------------------------------
+* Opening Hours: Monday to Friday from 07:00 to 21:00. Saturdays and 
+  Sundays from 08:00 to 20:00.
+* Wi-Fi Usage: The network name is "CafeCodigo_HighSpeed". The password 
+  changes daily and is printed on the purchase receipt. Access is 
+  limited to 2 hours with a minimum consumption of €3.00.
+* Laptop Policy: Laptop use is allowed only at tables in the back area 
+  (Tables 1 to 10). Tables on the outdoor terrace and near the entrance 
+  (Tables 11 to 20) are designated "Screen-Free Zones" to encourage 
+  conversation.
+
+2. COFFEE AND BEVERAGES MENU
+------------------------------------------------------------------------
+* Single Espresso: €1.80 (Specialty coffee, single-origin Colombia).
+* Double Espresso: €2.50.
+* Café Latte: €3.10 (Whole, skimmed, oat, or soy milk).
+* Special Cappuccino: €3.50 (With a touch of cinnamon and organic cocoa).
+* Cold Brew: €4.00 (Cold-steeped for 18 hours).
+* Matcha Latte Tea: €4.20.
+* Extra Charges: Switching to plant-based milk (oat or soy) has an 
+  additional cost of €0.40, except on Thursdays, when it is free of charge.
+
+3. SPECIAL OFFERS AND PROMOTIONS (CURRENTLY ACTIVE)
+------------------------------------------------------------------------
+* "Early Bird Offer": From Monday to Friday, between 07:00 and 08:30 AM, 
+  any Single Espresso paired with a classic Croissant costs only €3.00 
+  in total.
+* "Frequent Customer Afternoons": Every Tuesday and Thursday, from 16:00 
+  to 18:00, there is a 2-for-1 promo on Café Latte (if a milk alternative 
+  is requested, the higher-priced item will be charged).
+* "Developers Promo": If you show that you have a code editor (such as 
+  VS Code) installed on your laptop or mobile phone, you receive a direct 
+  10% discount on any Cold Brew. This offer cannot be combined with the 
+  Early Bird Offer.
+* Digital Loyalty Card: For every 9 coffees scanned in our official app, 
+  the 10th coffee is completely free (any choice from the menu).
+
+4. REFUND AND COMPLAINTS POLICY
+------------------------------------------------------------------------
+If a customer is not satisfied with the temperature or the grind size 
+of their coffee, they have the right to request a free replacement, 
+provided that no more than one-third of the cup has been consumed. 
+Complaints regarding promotional pricing or discounts must be resolved 
+at the cash register before leaving the premises.

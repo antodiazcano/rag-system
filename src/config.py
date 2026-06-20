@@ -1,34 +1,29 @@
 """Configuration of the project."""
 
+import os
 from dataclasses import dataclass
 
-# import torch
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 @dataclass
-class ModelConfig:
-    """Class to define the configuration of the model."""
+class VectorDBConfig:
+    """Class to define the configuration of the vector db."""
 
-    in_dim = 3
-    out_dim = 1
-
-
-@dataclass
-class TrainingConfig:
-    """Class to define the configuration of the training."""
-
-    epochs = 10
-    batch_size = 64
-    lr = 1e-3
-    # optimizer = torch.optim.Adam
+    pinecone_api_key = os.getenv("PINECONE_API_KEY")
+    pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
+    pinecone_cloud = os.getenv("PINECONE_CLOUD")
+    pinecone_region = os.getenv("PINECONE_REGION")
 
 
 @dataclass
 class Config:
     """Main configuration class."""
 
-    model = ModelConfig()
-    training = TrainingConfig()
+    vector_db = VectorDBConfig()
 
 
 config = Config()
