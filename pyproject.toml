@@ -19,6 +19,7 @@ dependencies = [
     "pinecone>=9.1.0",
     "pylint>=4.0.5",
     "pypdf>=6.13.3",
+    "rank-bm25>=0.2.2",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
@@ -27,6 +28,10 @@ dependencies = [
 
 [[tool.mypy.overrides]]
 module = ["sentence-transformers.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["rank_bm25"]
 ignore_missing_imports = true
 
 [tool.flake8]

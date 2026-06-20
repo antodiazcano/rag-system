@@ -1,8 +1,8 @@
 """Script to define some utilities used."""
 
+from pinecone import Index, Pinecone
 from sentence_transformers import SentenceTransformer
 
-from pinecone import Index, Pinecone
 from src.config import config
 
 

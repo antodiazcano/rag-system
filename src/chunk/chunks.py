@@ -110,13 +110,13 @@ class DocumentProcessor:
             Text of each chunk and embedding of each chunk.
         """
 
-        raw_text = self._extract_text()
-        clean_text = self._clean_text(raw_text)
+        raw_text = self.extract_text()
+        clean_text = self.clean_text(raw_text)
         chunks = self.chunker.chunk(clean_text)
 
         return chunks, embed_chunks(chunks)
 
-    def _extract_text(self) -> str:
+    def extract_text(self) -> str:
         """Extracts the whole text from the pdf.
 
         Returns:
@@ -132,7 +132,7 @@ class DocumentProcessor:
 
         return "\n\n".join(pages_text)
 
-    def _clean_text(self, text: str) -> str:
+    def clean_text(self, text: str) -> str:
         """Cleans the text.
 
         Args:
