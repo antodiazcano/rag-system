@@ -24,6 +24,7 @@ dependencies = [
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
     "sentence-transformers>=5.6.0",
+    "streamlit>=1.58.0",
 ]
 
 [[tool.mypy.overrides]]
@@ -36,7 +37,7 @@ ignore_missing_imports = true
 
 [tool.flake8]
 max-line-length = 88
-ignore = ["E203", "W503"]
+ignore = ["E203", "W503", "E402"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -20,10 +20,18 @@ class VectorDBConfig:
 
 
 @dataclass
+class GroqConfig:
+    """Class to define the configuration of Groq."""
+
+    groq_api_key = os.getenv("GROQ_API_KEY")
+
+
+@dataclass
 class Config:
     """Main configuration class."""
 
     vector_db = VectorDBConfig()
+    groq = GroqConfig()
 
 
 config = Config()

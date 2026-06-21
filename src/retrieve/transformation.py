@@ -4,6 +4,9 @@ from typing import Protocol
 
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_groq import ChatGroq
+from pydantic import SecretStr
+
+from src.config import config
 
 
 class QueryTransformer(Protocol):
@@ -51,7 +54,11 @@ class ExpansionQueryTransformer:
             temperature: Temperature of the model.
         """
 
-        self.llm = ChatGroq(model=model, temperature=temperature)
+        self.llm = ChatGroq(
+            model=model,
+            temperature=temperature,
+            api_key=SecretStr(config.groq.groq_api_key or ""),
+        )
         self.system_prompt = (
             "You are an expert search optimization engine operating as a Query "
             "Expansion Transformer in a RAG pipeline. Your sole objective is to take "
@@ -69,7 +76,7 @@ class ExpansionQueryTransformer:
             "target documents where the answer likely resides.\n\n"
             "### Instructions:\n"
             "- Analyze the user's original query.\n"
-            "- Generate exactly 4-5 diverse search variations.\n"
+            "- Generate exactly 2-3 diverse search variations.\n"
             "- Ensure each variation approaches the problem from a different angle "
             "(e.g., one conceptual, one keyword-heavy, one technical/tool-specific, "
             "one phrasing it as a solution).\n"
@@ -81,7 +88,6 @@ class ExpansionQueryTransformer:
             "[\n"
             "Python memory leak troubleshooting and debugging techniques, \n"
             "How to detect memory growth using tracemalloc and objgraph, \n"
-            "Fixing garbage collection issues and uncollectable objects in Python, \n"
             "Python memory management profiles high RSS usage fix\n"
             "]\n"
             "User Query: 'What is the difference between OAuth2 and SAML?'\n"
@@ -90,7 +96,6 @@ class ExpansionQueryTransformer:
             "OAuth2 vs SAML 2.0 comparison security architecture, \n"
             "When to use SAML instead of OAuth for enterprise SSO, \n"
             "Token based authorization vs XML assertion authentication, \n"
-            "OAuth2 capabilities vs SAML federated identity management, \n"
             "]"
         )
 

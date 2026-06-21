@@ -14,7 +14,7 @@ def create_prompt(original_query: str, chunks: list[str]) -> str:
 
     prompt = f"Original query of the user: {original_query}\n\nRetrieved chunks:"
 
-    for chunk in chunks:
-        prompt += f"\n\n{chunk}"
+    for i, chunk in enumerate(chunks):
+        prompt += f"\n\nChunk {i}: {chunk}"
 
     return prompt
