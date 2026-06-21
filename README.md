@@ -8,7 +8,7 @@ Given a PDF document, the system ingests it, chunks it, stores the embeddings in
 
 ## Architecture
 
-```
+```mermaid
 flowchart TD
     subgraph IDX["📥 Indexing Pipeline (offline)"]
         PDF["📄 docs/coffee.pdf"]
