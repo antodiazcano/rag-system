@@ -17,11 +17,10 @@ def save_to_db(
     """Saves chunks and their embeddings into the vector db.
 
     Args:
-        chunks: list of chunk texts.
-        embeddings: list of embedding vectors, one per chunk (same order).
+        chunks: List of chunk texts.
+        embeddings: List of embedding vectors, one per chunk (same order).
         pinecone_index: Pinecone index to upsert into.
-        source: name/identifier of the source document.
-        batch_size: number of vectors per upsert call.
+        batch_size: Number of vectors per upsert call.
     """
 
     vectors = [

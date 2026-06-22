@@ -4,17 +4,11 @@ import re
 from typing import Protocol
 
 from pypdf import PdfReader
-
-from src.utils import embed_chunks
+from sentence_transformers import SentenceTransformer
 
 
 class ChunkingStrategy(Protocol):
-    """Structural interface that any chunking strategy must satisfy.
-
-    Any object exposing a compatible 'chunk' method works here: it does NOT need to
-    inherit from this class. This is what lets you swap chunking behavior without
-    touching DocumentProcessor.
-    """
+    """Structural interface that any chunking strategy must satisfy."""
 
     def chunk(self, text: str) -> list[str]:
         """Divides the cleaned text in a list of chunks.
@@ -55,11 +49,8 @@ class FixedWindowChunker:
         chunks = []
 
         for i in range(0, len(text), step):
-            window = text[i : i + self.window_size]
-            if window:
-                chunks.append(window)
-            if i + self.window_size >= len(text):
-                break
+            window = text[i : min(len(text) - 1, i + self.window_size)]
+            chunks.append(window)
 
         return chunks
 
@@ -85,23 +76,25 @@ class ParagraphChunker:
 
 
 class DocumentProcessor:
-    """Extracts, cleans, chunks and embeds the text of a document.
+    """Extracts, cleans, chunks and embeds the text of a document."""
 
-    The chunking behavior is injected ('chunker') rather than implemented via
-    subclassing, so any object following the ChunkingStrategy protocol can be plugged in
-    here.
-    """
-
-    def __init__(self, path: str, chunker: ChunkingStrategy) -> None:
+    def __init__(
+        self,
+        path: str,
+        chunker: ChunkingStrategy,
+        embedding_model: str = "all-MiniLM-L6-v2",
+    ) -> None:
         """Constructor of the class.
 
         Args:
             path: Path where the pdf is stored.
             chunker: Strategy used to split the cleaned text into chunks.
+            embedding_model: Model used to embed the chunks.
         """
 
         self.path = path
         self.chunker = chunker
+        self.embed_chunks = SentenceTransformer(embedding_model)
 
     def process(self) -> tuple[list[str], list[list[float]]]:
         """Processes a document to obtain chunks from it.
@@ -113,8 +106,11 @@ class DocumentProcessor:
         raw_text = self.extract_text()
         clean_text = self.clean_text(raw_text)
         chunks = self.chunker.chunk(clean_text)
+        embeddings = self.embed_chunks.encode(
+            chunks, normalize_embeddings=True
+        ).tolist()
 
-        return chunks, embed_chunks(chunks)
+        return chunks, embeddings
 
     def extract_text(self) -> str:
         """Extracts the whole text from the pdf.

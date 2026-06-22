@@ -4,7 +4,6 @@ from src.retrieve.context import create_prompt
 from src.retrieve.reranking import Reranker
 from src.retrieve.search import Search
 from src.retrieve.transformation import QueryTransformer
-from src.utils import get_index_vector_db
 
 
 class RAGPipeline:
@@ -21,7 +20,6 @@ class RAGPipeline:
             reranker: Reranker of the scores of the chunks.
         """
 
-        self.pinecone_index = get_index_vector_db()
         self.query_transformer = query_transformer
         self.searcher = searcher
         self.reranker = reranker

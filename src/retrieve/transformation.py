@@ -42,7 +42,7 @@ class BaselineQueryTransformer:
 
 class ExpansionQueryTransformer:
     """Class for the expansion query transformer, which passes the query to an LLM to
-    expand it and make it more suitable for the search."""
+    expand it and makes it more suitable for the search."""
 
     def __init__(
         self, model: str = "llama-3.3-70b-versatile", temperature: float = 0.7
@@ -71,9 +71,6 @@ class ExpansionQueryTransformer:
             "core topic.\n"
             "2. **Deconstruct Complexity:** If the user query contains multiple "
             "underlying questions, break them down into distinct, atomic sub-queries.\n"
-            "3. **Anticipate Content (HyDE):** Generate search phrases that mimic the "
-            "technical phrasing, declarative statements, or semantic structure of the "
-            "target documents where the answer likely resides.\n\n"
             "### Instructions:\n"
             "- Analyze the user's original query.\n"
             "- Generate exactly 2-3 diverse search variations.\n"

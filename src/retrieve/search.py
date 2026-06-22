@@ -5,8 +5,7 @@ from abc import ABC, abstractmethod
 
 from pinecone import Index
 from rank_bm25 import BM25Okapi
-
-from src.utils import embed_chunks
+from sentence_transformers import SentenceTransformer
 
 
 class Search(ABC):
@@ -38,6 +37,21 @@ class Search(ABC):
 class VectorSearch(Search):
     """Vector search of the most similar chunks to the query."""
 
+    def __init__(
+        self, pinecone_index: Index, k: int, embedding_model: str = "all-MiniLM-L6-v2"
+    ) -> None:
+        """Constructor of the class.
+
+        Args:
+            pinecone_index: Pinecone index used for retrieval.
+            k: Number of chunks to retrieve.
+            embedding_model: Model used to embed the chunks.
+        """
+
+        super().__init__(pinecone_index, k)
+
+        self.embed_chunks = SentenceTransformer(embedding_model)
+
     def search(self, query: str) -> list[str]:
         """Searches the most similar chunks to the query in the vector db.
 
@@ -48,7 +62,9 @@ class VectorSearch(Search):
             Most relevant chunks for the query.
         """
 
-        embedded_query = embed_chunks([query])[0]
+        embedded_query = self.embed_chunks.encode(
+            [query], normalize_embeddings=True
+        ).tolist()[0]
         response = self.pinecone_index.query(
             vector=embedded_query, top_k=self.k, include_metadata=True
         )
@@ -65,23 +81,26 @@ class VectorSearch(Search):
 class HybridSearch(Search):
     """Hybrid search combining BM25 keyword retrieval with vector search.
 
-    Runs BM25 over a local corpus and vector search over Pinecone, then fuses
-    the ranked lists using Reciprocal Rank Fusion (RRF). The corpus is
-    automatically fetched from the Pinecone index at init time.
+    Runs BM25 over a local corpus and vector search over Pinecone, then fuses the ranked
+    lists using Reciprocal Rank Fusion (RRF). The corpus is automatically fetched from
+    the Pinecone index at init time.
     """
 
-    def __init__(self, pinecone_index: Index, k: int) -> None:
+    def __init__(self, pinecone_index: Index, k: int, factor_retrieve: int = 2) -> None:
         """Constructor of the class.
 
         Args:
             pinecone_index: Pinecone index used for retrieval.
             k: Number of chunks to retrieve.
+            factor_retrieve: Factor to retrieve more chunks from BM25 and vector search
+                before applying RRF. However, the final number of chunks will be k.
         """
 
         super().__init__(pinecone_index, k)
 
         self.corpus = self._fetch_corpus()
         self.bm25 = BM25Okapi([self._tokenize(doc) for doc in self.corpus])
+        self.factor_retrieve = factor_retrieve
 
     @staticmethod
     def _tokenize(text: str) -> list[str]:
@@ -129,7 +148,7 @@ class HybridSearch(Search):
         """Applies RRF algorithm to obtain the best k chunks.
 
         Args:
-            bm25 texts: Chunks obtained with BM25.
+            bm25_texts: Chunks obtained with BM25.
             vector_texts: Chunks obtained with vector search.
             k_constant: K constant of the algorithm.
 
@@ -139,11 +158,14 @@ class HybridSearch(Search):
 
         rrf_scores: dict[str, float] = {}
 
-        for rank, text in enumerate(bm25_texts[: self.k * 2]):
-            rrf_scores[text] = rrf_scores.get(text, 0) + 1.0 / (k_constant + rank)
+        for rank, text in enumerate(bm25_texts[: self.k * self.factor_retrieve]):
+            rrf_scores[text] = 1 / (k_constant + rank)
 
         for rank, text in enumerate(vector_texts):
-            rrf_scores[text] = rrf_scores.get(text, 0) + 1.0 / (k_constant + rank)
+            if text in rrf_scores:
+                rrf_scores[text] += 1 / (k_constant + rank)
+            else:
+                rrf_scores[text] = 1 / (k_constant + rank)
 
         ranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
 
@@ -166,7 +188,9 @@ class HybridSearch(Search):
         bm25_texts = [self.corpus[idx] for idx, _ in bm25_ranked]
 
         # Vector search results
-        vector_texts = VectorSearch(self.pinecone_index, self.k * 2).search(query)
+        vector_texts = VectorSearch(
+            self.pinecone_index, self.k * self.factor_retrieve
+        ).search(query)
 
         # RRF algorithm
         return self.rrf(bm25_texts, vector_texts)
