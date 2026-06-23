@@ -158,7 +158,7 @@ class HybridSearch(Search):
 
         rrf_scores: dict[str, float] = {}
 
-        for rank, text in enumerate(bm25_texts[: self.k * self.factor_retrieve]):
+        for rank, text in enumerate(bm25_texts):
             rrf_scores[text] = 1 / (k_constant + rank)
 
         for rank, text in enumerate(vector_texts):
@@ -185,7 +185,9 @@ class HybridSearch(Search):
         tokenized_query = self._tokenize(query)
         bm25_scores = self.bm25.get_scores(tokenized_query)
         bm25_ranked = sorted(enumerate(bm25_scores), key=lambda x: x[1], reverse=True)
-        bm25_texts = [self.corpus[idx] for idx, _ in bm25_ranked]
+        bm25_texts = [self.corpus[idx] for idx, _ in bm25_ranked][
+            : self.k * self.factor_retrieve
+        ]
 
         # Vector search results
         vector_texts = VectorSearch(
